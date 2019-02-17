@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -12,6 +13,16 @@ public class Platform {
 	private ImageView appearance;
 	private Rectangle collisionBox;
 	
+	public static ArrayList<Platform> platforms;
+	
+	static {
+		platforms = new ArrayList<Platform>();
+		
+		for (int i = 0; i < 1000; i++) {
+			Platform pf = new Platform(100 * i, -100, 162, 15, false);
+		}
+	}
+	
 	public Platform(int x, int y, int w, int h, boolean dm) {
 		xPosition = x;
 		yPosition = y;
@@ -21,6 +32,15 @@ public class Platform {
 		appearance = new ImageView(new Image("platform.png"));
 		collisionBox = new Rectangle(width, height, Color.TRANSPARENT);
 		collisionBox.setStroke(Color.RED);
+		collisionBox.setVisible(debugMode);
+		
+		platforms.add(this);
+	}
+	
+	public boolean collidingWithPlayer(Player p) {
+		int xDistance = Math.abs(xPosition - p.getXPosition());
+		int yDistance = yPosition - p.getYPosition();
+		return (2 * xDistance <= width && (yDistance >= 0 && yDistance <= height));
 	}
 	
 	public int getXPosition() { return xPosition; }

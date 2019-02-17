@@ -8,10 +8,14 @@ public class Player {
 	private int yVelocity = 0;
 	private int xAccel = 0;
 	private int yAccel = -1;
+	private int maxShotDelay = 0;
+	private int currentShotDelay = maxShotDelay;
 	public boolean onPlatform = false;
 	public boolean isJumping = false;
 	public boolean isMovingLeft = false;
 	public boolean isMovingRight = false;
+	public boolean isShooting = false;
+	private Direction direction = Direction.RIGHT;
 	private ImageView appearance = new ImageView(new Image("player_0.png"));
 	
 	static Player Player = null;
@@ -22,6 +26,40 @@ public class Player {
 		}
 		
 		return Player;
+	}
+	
+	public void onPlatformMovement() {
+		if (isJumping) {
+			yVelocity = 15;
+		}
+		
+		if (isMovingLeft) {
+			xVelocity = -4;
+			direction = Direction.LEFT;
+		} else if (!isMovingRight) {
+			xVelocity = 0;
+		}
+		
+		if (isMovingRight) {
+			xVelocity = 4;
+			direction = Direction.RIGHT;
+		} else if (!isMovingLeft) {
+			xVelocity = 0;
+		}
+	}
+	
+	public void inAirMovement() {
+		yVelocity += yAccel;
+		
+		if (yVelocity < -10) {
+			yVelocity = -10;
+		}
+	}
+	
+	public void clipToPlatform(Platform pf) {
+		yPosition = pf.getYPosition();
+		yVelocity = 0;
+		onPlatform = true;
 	}
 	
 	public int getXPosition() { return xPosition; }
@@ -47,6 +85,18 @@ public class Player {
 	public int getYAccel() { return yAccel; }
 	public void setYAccel(int y) {
 		yAccel = y;
+	}
+	public int getMaxShotDelay() { return maxShotDelay; }
+	public void setMaxShotDelay(int m) {
+		maxShotDelay = m;
+	}
+	public int getCurrentShotDelay() { return currentShotDelay; }
+	public void setCurrentShotDelay(int c) {
+		currentShotDelay = c;
+	}
+	public Direction getDirection() { return direction; }
+	public void setDirection(Direction d) {
+		direction = d;
 	}
 	public ImageView getAppearance() { return appearance; }
 	public void setAppearance(ImageView a) {
